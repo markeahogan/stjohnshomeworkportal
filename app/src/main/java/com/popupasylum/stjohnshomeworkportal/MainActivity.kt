@@ -20,6 +20,7 @@ import android.view.*
 class MainActivity : AppCompatActivity() {
 
     private var myWebView: WebView? = null
+    private var isMathletics = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,12 +34,14 @@ class MainActivity : AppCompatActivity() {
         myWebView.settings.javaScriptEnabled = true
         myWebView.settings.allowContentAccess = true
         myWebView.settings.loadWithOverviewMode = true
-        myWebView.settings.useWideViewPort = true
+        myWebView.settings.useWideViewPort = false
         myWebView.settings.domStorageEnabled = true
         myWebView.settings.savePassword = true
+        myWebView.settings.builtInZoomControls = true
+        myWebView.settings.displayZoomControls = false
 
         myWebView.setOnTouchListener(View.OnTouchListener { view, motionEvent ->
-            hideSystemUI()
+            Handler().postDelayed({hideSystemUI()}, 1400)
             return@OnTouchListener false;
         })
 
@@ -46,6 +49,7 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             myWebView?.loadUrl("https://login.mathletics.com/")
+            isMathletics = true
         }
 
         hideSystemUI()
@@ -87,6 +91,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         hideSystemUI()
+
+        if (isMathletics) {
+            myWebView?.loadUrl("https://www.activelearnprimary.co.uk/")
+        }else {
+            myWebView?.loadUrl("https://login.mathletics.com/")
+        }
+        isMathletics = !isMathletics
         //super.onBackPressed()
     }
 

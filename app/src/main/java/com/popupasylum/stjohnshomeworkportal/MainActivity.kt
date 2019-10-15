@@ -12,6 +12,8 @@ import androidx.core.app.ComponentActivity.ExtraData
 import androidx.core.content.ContextCompat.getSystemService
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.os.Build
+import android.os.Handler
+import android.util.Log.e
 import android.view.*
 
 
@@ -35,6 +37,11 @@ class MainActivity : AppCompatActivity() {
         myWebView.settings.domStorageEnabled = true
         myWebView.settings.savePassword = true
 
+        myWebView.setOnTouchListener(View.OnTouchListener { view, motionEvent ->
+            hideSystemUI()
+            return@OnTouchListener false;
+        })
+
         setContentView(myWebView)
 
         if (savedInstanceState == null) {
@@ -42,11 +49,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         hideSystemUI()
-    }
-
-    override fun onTouchEvent(event: MotionEvent?): Boolean {
-        hideSystemUI()
-        return super.onTouchEvent(event)
     }
 
     private fun setupErrorHandling(myWebView: WebView) {
@@ -93,7 +95,7 @@ class MainActivity : AppCompatActivity() {
         hideSystemUI()
     }
 
-    private fun hideSystemUI() {
+    private fun hideSystemUI(): Boolean {
         window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_IMMERSIVE
                 // Set the content to appear under the system bars so that the
@@ -104,6 +106,8 @@ class MainActivity : AppCompatActivity() {
                 // Hide the nav bar and status bar
                 or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_FULLSCREEN)
+
+        return false
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
